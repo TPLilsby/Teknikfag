@@ -1,10 +1,11 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <WiFiS3.h>
+#include "secrets.h"
 
 // ---------------- WIFI ----------------
-char ssid[] = "Lab-ZBC";
-char pass[] = "Prestige#PuzzledCASH48!";
+char ssid[] = SECRET_SSID;
+char pass[] = SECRET_PASS;
 
 // ---------------- SENSOR ----------------
 #define SENSOR_PIN 4
@@ -13,11 +14,11 @@ OneWire oneWire(SENSOR_PIN);
 DallasTemperature DS18B20(&oneWire);
 
 // ---------------- SUPABASE ----------------
-const char* host = "nykattzjvckobdoyrnln.supabase.co";
+const char* host = SECRET_SUPABASE_HOST;
 
 const int httpsPort = 443;
 
-const char* supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55a2F0dHpqdmNrb2Jkb3lybmxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTM0NTQsImV4cCI6MjA4NzUyOTQ1NH0.d_2tKReBu45WNdZqzILr66biS4oXK0s5Fsdc2Fwaizg";
+const char* supabaseKey = SECRET_SUPABASE_KEY;
 
 // ---------------- CLIENT ----------------
 WiFiSSLClient client;
@@ -51,13 +52,15 @@ void sendTemperature(float value) {
   }
 
   String json = "{\"value\":" + String(value, 1) + "}";
-https://nykattzjvckobdoyrnln.supabase.co/rest/v1/temperature
   client.println("POST /rest/v1/temperature HTTP/1.1");
-  client.println("Host: nykattzjvckobdoyrnln.supabase.co");
+  client.print("Host: ");
+  client.println(SECRET_SUPABASE_HOST);
   client.println("Content-Type: application/json");
 
-  client.println("apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55a2F0dHpqdmNrb2Jkb3lybmxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTM0NTQsImV4cCI6MjA4NzUyOTQ1NH0.d_2tKReBu45WNdZqzILr66biS4oXK0s5Fsdc2Fwaizg");
-  client.println("Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55a2F0dHpqdmNrb2Jkb3lybmxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTM0NTQsImV4cCI6MjA4NzUyOTQ1NH0.d_2tKReBu45WNdZqzILr66biS4oXK0s5Fsdc2Fwaizg");
+  client.print("apikey: ");
+  client.println(SECRET_SUPABASE_KEY);
+  client.print("Authorization: Bearer ");
+  client.println(SECRET_SUPABASE_KEY);
 
 
   client.println("Prefer: return=minimal");
